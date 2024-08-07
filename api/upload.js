@@ -1,32 +1,34 @@
-import formidable from 'formidable';
+// api/upload.js
+import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import path from 'path';
-
-const uploadDir = path.join(process.cwd(), 'public/uploads');
-if (!fs.existsSync(uploadDir)){
-    fs.mkdirSync(uploadDir);
-}
+import { parse } from 'querystring';
 
 export const config = {
-    api: {
-        bodyParser: false
-    }
+  api: {
+    bodyParser: false,
+  },
 };
 
-export default function handler(req, res) {
-    const form = new formidable.IncomingForm();
-    form.uploadDir = uploadDir;
-    form.keepExtensions = true;
+export default async (req, res) => {
+  const form = new IncomingForm();
+  form.uploadDir = path.join(process.cwd(), 'public/uploads');
+  form.keepExtensions = true;
 
-    form.parse(req, (err, fields, files) => {
-        if (err) {
-            return res.status(500).json({ error: 'File upload error' });
-        }
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      res.status(500).json({ success: false, message: 'Error parsing the file' });
+      return;
+    }
+    if (!files.file) {
+      res.status(400).json({ success: false, message: 'No file uploaded' });
+      return;
+    }
+    
+    const filePath = files.file[0].filepath;
+    const fileName = path.basename(filePath);
+    const fileUrl = `/uploads/${fileName}`;
 
-        const file = files.file[0];
-        const filename = path.basename(file.filepath);
-        const randomNumber = Math.floor(Math.random() * 1000000);
-
-        res.status(200).json({ filename, randomNumber });
-    });
-}
+    res.status(200).json({ success: true, url: fileUrl });
+  });
+};
