@@ -3,47 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webhook Checker</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-        #result {
-            font-size: 24px;
-            color: #333;
-        }
-    </style>
+    <title>Webhook Check</title>
 </head>
 <body>
-    <div id="result">Waiting for response...</div>
-    <script>
-        function checkWebhook() {
-            // The URL with the query parameter 'name'
-            const url = 'http://localhost:3000/webhook?name=sigma%20rizzler';
+    <h1>Webhook Check</h1>
+    <button id="checkWebhook">Check Webhook</button>
+    <p id="status"></p>
 
-            fetch(url)
-                .then(response => {
-                    if (response.ok) {
-                        return response.text();
+    <script>
+        document.getElementById('checkWebhook').addEventListener('click', () => {
+            fetch('/check-webhook')
+                .then(response => response.json())
+                .then(data => {
+                    const statusElement = document.getElementById('status');
+                    if (data.valid) {
+                        statusElement.textContent = 'Webhook is valid. You can make GET requests.';
                     } else {
-                        throw new Error('Request failed with status ' + response.status);
+                        statusElement.textContent = 'Webhook is invalid. You cannot make GET requests.';
                     }
                 })
-                .then(text => {
-                    document.getElementById('result').textContent = text;
-                })
                 .catch(error => {
-                    document.getElementById('result').textContent = 'Error: ' + error.message;
+                    console.error('Error:', error);
+                    document.getElementById('status').textContent = 'An error occurred.';
                 });
-        }
-
-        // Check the webhook when the page loads
-        window.onload = checkWebhook;
+        });
     </script>
 </body>
 </html>
