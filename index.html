@@ -3,16 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Shortener</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Webhook Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #result {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Discord Lua File URL Shortener</h1>
-        <input type="text" id="urlInput" placeholder="Paste your Discord Lua URL here">
-        <button id="generateButton">Generate Short URL</button>
-        <p id="result"></p>
-    </div>
-    <script src="script.js"></script>
+    <div id="result">Waiting for response...</div>
+    <script>
+        function checkWebhook() {
+            // The URL with the query parameter 'name'
+            const url = 'http://localhost:3000/webhook?name=sigma%20rizzler';
+
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Request failed with status ' + response.status);
+                    }
+                })
+                .then(text => {
+                    document.getElementById('result').textContent = text;
+                })
+                .catch(error => {
+                    document.getElementById('result').textContent = 'Error: ' + error.message;
+                });
+        }
+
+        // Check the webhook when the page loads
+        window.onload = checkWebhook;
+    </script>
 </body>
 </html>
