@@ -1,32 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webhook Check</title>
+    <!-- Essential Meta Tags -->
+    <meta property="og:title" content="NEON BLADE - MoonDeity">
+    <meta property="og:description" content="Now playing on MyMusic">
+    <meta property="og:image" content="https://yourdomain.com/album-art.jpg">
+    <meta property="og:url" content="https://yourdomain.com/song/neon-blade">
+    <meta property="og:type" content="music.song">
+    
+    <!-- Music Specific -->
+    <meta property="og:audio" content="https://yourdomain.com/audio/neon-blade.mp3">
+    <meta property="og:audio:type" content="audio/mpeg">
+    
+    <!-- Discord-Specific -->
+    <meta name="theme-color" content="#FF0000">
 </head>
 <body>
-    <h1>Webhook Check</h1>
-    <button id="checkWebhook">Check Webhook</button>
-    <p id="status"></p>
-
-    <script>
-        document.getElementById('checkWebhook').addEventListener('click', () => {
-            fetch('/check-webhook')
-                .then(response => response.json())
-                .then(data => {
-                    const statusElement = document.getElementById('status');
-                    if (data.valid) {
-                        statusElement.textContent = 'Webhook is valid. You can make GET requests.';
-                    } else {
-                        statusElement.textContent = 'Webhook is invalid. You cannot make GET requests.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('status').textContent = 'An error occurred.';
-                });
-        });
-    </script>
+    <!-- Your actual player UI would go here -->
+    <div class="player">...</div>
 </body>
 </html>
